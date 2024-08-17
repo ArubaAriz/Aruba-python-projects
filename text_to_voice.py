@@ -9,7 +9,7 @@ x=f.read()
 #     text = file.read()
 
 # Define the language as Hindi
-language = 'hi'
+language = 'en'
 
 audio = gTTS(text,lang=language,slow=False)
 
