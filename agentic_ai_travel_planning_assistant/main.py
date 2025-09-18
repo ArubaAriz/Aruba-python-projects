@@ -73,7 +73,7 @@ def main():
                 # Sections with expanders
                 with st.expander(" Transportation Options", expanded=True):
                     st.markdown("### Travel Options")
-                    st.text_area("AI Suggested Routes", crew_output.get("transportation", "No data available"), height=200)
+                    st.text_area("AI Suggested Routes", crew_output.get("transportation_advice", "No data available"), height=200)
 
 
                 with st.expander(" Recommended Hotels"):
