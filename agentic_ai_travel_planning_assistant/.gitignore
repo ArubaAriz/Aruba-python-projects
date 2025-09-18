@@ -1,0 +1,25 @@
+# Virtual environments
+.venv/
+venv/
+
+# VS Code settings
+.vscode/
+
+# Environment variables (🔑 keep secrets out of GitHub)
+.env
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Local files
+home.html
+img.jpg
+index.html
+myfirstphthonprg.py
+page2.html
+payment_form.html
+style.css
+style1.css
