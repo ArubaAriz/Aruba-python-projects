@@ -3,7 +3,6 @@ from trip_agent import TripCrew
 from dotenv import load_dotenv
 import os  
 import io
-import pandas as pd
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet 
 
@@ -72,21 +71,10 @@ def main():
 
                 # Sections with expanders
                 with st.expander(" Transportation Options", expanded=True):
-                    st.markdown("### Travel Options")
-                    st.text_area("AI Suggested Routes", crew_output.get("transportation_advice", "No data available"), height=200)
-
+                    st.write(crew_output.get("transportation_advice", "No data available"))
 
                 with st.expander(" Recommended Hotels"):
-                    st.markdown("### Hotel Recommendations")
-                    hotels_raw = crew_output.get("hotel_advice", "No data available")
-                    for hotel in hotels_raw.split("\n\n"):
-                        st.markdown(
-                            f"""
-                            <div style="padding:10px; border:1px solid #ddd; border-radius:10px; margin-bottom:12px; background:#f9f9f9;">
-                                {hotel}
-                            </div>
-                            """, unsafe_allow_html=True
-                        )
+                    st.write(crew_output.get("hotel_advice", "No data available"))
 
                 with st.expander(" Recommended Cities to Visit"):
                     st.write(crew_output.get("city_selection", "No data available"))
