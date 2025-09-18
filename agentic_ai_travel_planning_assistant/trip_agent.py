@@ -28,29 +28,43 @@ class TripCrew:
         
         # Step 0: Transportation
         transportation_prompt = f"""
-        The user is currently in {self.inputs.get('current_city', 'Not Provided')}.
-        They want to travel to Sikkim by {self.inputs.get('transportation_preference', 'Not Provided')}.
-        Suggest the best way to reach Sikkim from this city, step by step.
-        Include:
-        - Recommended route
-        - Approximate travel time
-        - Estimated cost (in INR)
-        - Practical travel tips
+        You are a professional Indian travel planner. The user is in {self.inputs.get('current_city', 'Not Provided')} 
+        and wants to reach Sikkim by {self.inputs.get('transportation_preference', 'Not Provided')}.
+
+        Guidelines:
+        - If 'Luxury' budget is chosen, recommend only premium trains (e.g. Rajdhani, Vande Bharat, 1st Class AC), premium buses, or business/first-class flights.
+        - Avoid suggesting trains/flights that don’t actually run on this route. For example: Shatabdi does not go from Bhubaneswar to New Jalpaiguri.
+        - Always provide **3–5 options** (not just 2).
+        - Each option must include: Train/Flight/Bus/Car name, route, class type, duration, and estimated cost in INR.
+        - Present output as a **Markdown table** with columns: `Option | Route | Duration | Class/Type | Cost (INR)`.
+        - Always provide at least 4-5 realistic options (not just 1-2).
+        - Strictly match comfort level:
+           * Economy → Sleeper (Train), Non-AC Bus, Standard Flight (Economy Class), Shared Cab
+           * Mid-range → 3AC/2AC (Train), Volvo AC Bus, Flight Premium Economy, Private Car
+           * Luxury → 1st AC/Executive/Vande Bharat/Tejas (Train), Sleeper Bus Luxury, Business/First Class Flights, Chauffeur-driven Car
+        - If a transport option doesn’t exist (e.g., Shatabdi on BBSR–NJP route), do not suggest it.
+        - Give actual connections if needed (e.g., via Howrah).
+        - Use Markdown table with: Option, Route, Duration, Cost (INR), Class/Details.
         """
+
         outputs["transportation_advice"] = self.agent.ask_model(transportation_prompt)
 
         # Step 1: Hotels
         hotel_prompt = f"""
-        You are a Sikkim-focused tourist guide.
-        Based on the hotel preference '{self.inputs.get('hotel_preference', 'Not Provided')}'
-        and budget '{self.inputs.get('budget', 'Not Provided')}',
-        suggest 5 hotels in Sikkim.
-        For each include:
-        - Name
-        - Location
-        - Short description
-        - Approximate cost per night (INR)
+        You are a Sikkim-focused tourist guide. 
+        The user selected '{self.inputs.get('hotel_preference', 'Not Provided')}' category and '{self.inputs.get('budget', 'Not Provided')}' budget.  
+
+        Guidelines:
+        - Recommend **only hotels that exactly match the selected star rating** (no 5-star if 3-star chosen).
+        - Give **5 options** with Name, Location, Key Highlight, Cost per Night (INR).
+        - Present output as a **Markdown table** with columns: `Hotel | Location | Highlight | Cost (INR/night)`.
+        - If Economy → 2-3 star budget hotels, guest houses
+        - If Mid-range → 3-4 star boutique hotels
+        - If Luxury → 5 star hotels, resorts, heritage properties
+        - Don’t recommend outside chosen budget level.
+        - Show in Markdown table: Hotel, Location, Description, Cost/night (INR).
         """
+
         outputs["hotel_advice"] = self.agent.ask_model(hotel_prompt)
 
         # Step 2: Recommended Cities
@@ -86,7 +100,12 @@ class TripCrew:
         - Activity sequencing
         - Transportation between locations with estimated cost
         - Meal planning suggestions with estimated costs
-        Format as a Markdown table.
+         Format as a Markdown table.
+         - Match budget and preferences for accommodation & meals.
+        - Split per day with morning/afternoon/evening activities.
+        - Mention travel time between places.
+        - Suggest realistic meal options (street food for economy, fine dining for luxury).
+        - Format as Markdown table with: Day, Time, Activity, Transport/Notes.
         """
         outputs["itinerary"] = self.agent.ask_model(itinerary_prompt)
 
